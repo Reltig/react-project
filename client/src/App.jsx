@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import Register from './Register';
+import RegisterAndLogging from './Register';
 import axios from 'axios';
 import UserContextProvider from './UserContext';
 import Routes from './Routes';
