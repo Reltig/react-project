@@ -54,6 +54,27 @@ app.post("/login", async (req, res) => {
     }
 })
 
+app.post("/goods-list", (req,res) => {
+    console.log(req.body.startWith)
+    res.json([
+        {
+            name: "tovar1",
+            description: "desc tovar1",
+            price: 100
+        },
+        {
+            name: "tovar2",
+            description: "desc tovar2",
+            price: 200
+        },
+        {
+            name: "tovar3",
+            description: "desc tovar3",
+            price: 300
+        }
+    ]).status(200);
+})
+
 app.post("/register", async (req,res)=>{
     const {username, password} = req.body;
     try{
