@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken")
 const dotenv = require("dotenv")
 const User = require("./models/User")
+const multer = require("multer");
+const upload = multer({ dest: "public/" })
 
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL);
@@ -14,6 +16,8 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 
 const app = express();
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("./public"));
 app.use(cookieParser())
 app.use(cors({
     credentials: true,
@@ -94,5 +98,18 @@ app.post("/register", async (req,res)=>{
         res.status(500).json("error");
     }
 })
+
+app.post("/add-good", (req, res) => {
+    console.log(req.body);
+    res.json("create").status(201);
+})
+
+app.post("/upload_files", upload.any(), uploadFiles);
+
+function uploadFiles(req, res) {
+    console.log(req.body);
+    console.log(req.files);
+    res.json({ message: "Successfully uploaded files" });
+}
 
 app.listen(4000);

@@ -10,6 +10,7 @@ import {
     Outlet
   } from 'react-router-dom';
 import GoodsList from "./pages/GoodsList"
+import AddGoodPage from "./pages/AddGoodPage"
 
 export default function MainApp() {
     return (
@@ -18,6 +19,7 @@ export default function MainApp() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" index element={<GoodsList/>}/>
+                    <Route path="/add-good" element={<AddGoodPage/>}/>
                 </Routes>
             </BrowserRouter>
             <Outlet/>
