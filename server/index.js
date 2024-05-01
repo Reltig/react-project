@@ -91,7 +91,6 @@ app.post("/register", async (req,res)=>{
         });
     } 
     catch (err){
-        if (err) throw err;
         res.status(500).json("error");
     }
 })
