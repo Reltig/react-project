@@ -14,6 +14,24 @@ mongoose.connect(process.env.MONGO_URL);
 const jwtSecret = process.env.JWT_SECRET;
 const bcryptSalt = bcrypt.genSaltSync(10);
 
+let baseShopCart = [
+    {
+        name: "tovar1",
+        description: "desc tovar1",
+        price: 100
+    },
+    {
+        name: "tovar2",
+        description: "desc tovar2",
+        price: 200
+    },
+    {
+        name: "tovar3",
+        description: "desc tovar3",
+        price: 300
+    }
+]
+
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -60,23 +78,7 @@ app.post("/login", async (req, res) => {
 
 app.post("/goods-list", (req,res) => {
     console.log(req.body.startWith)
-    res.json([
-        {
-            name: "tovar1",
-            description: "desc tovar1",
-            price: 100
-        },
-        {
-            name: "tovar2",
-            description: "desc tovar2",
-            price: 200
-        },
-        {
-            name: "tovar3",
-            description: "desc tovar3",
-            price: 300
-        }
-    ]).status(200);
+    res.json(baseShopCart).status(200);
 })
 
 app.post("/register", async (req,res)=>{
@@ -107,9 +109,14 @@ app.post("/add-good", (req, res) => {
 app.post("/upload_files", upload.any(), uploadFiles);
 
 function uploadFiles(req, res) {
-    console.log(req.body);
-    console.log(req.files);
-    res.json({ message: "Successfully uploaded files" });
+    baseShopCart = [...baseShopCart, {...req.body, filename: req.files[0].filename}]
+    console.log(baseShopCart)
+    res.json({ message: "Successfully uploaded files" }).status(201)
 }
+
+app.get("/files/:fileId", (req, res)=>{
+    const file = `${__dirname}/public/${req.params.fileId}`;
+    res.download(file);
+})
 
 app.listen(4000);

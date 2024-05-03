@@ -15,7 +15,7 @@ export default function ProductsList() {
     return (
         <div className="grid grid-cols-4">
             {list.map(el => (
-                <ProductCard key={el.name} name={el.name} description={el.description} price={el.price}/>
+                <ProductCard key={el.name} name={el.name} description={el.description} price={el.price} filename={el.filename}/>
             ))}
         </div>
     )
