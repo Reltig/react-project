@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken")
 const dotenv = require("dotenv")
 const User = require("./models/User")
+const Product = require("./models/Product")
 const multer = require("multer");
 const upload = multer({ dest: "public/" })
 
@@ -76,11 +77,6 @@ app.post("/login", async (req, res) => {
     }
 })
 
-app.post("/goods-list", (req,res) => {
-    console.log(req.body.startWith)
-    res.json(baseShopCart).status(200);
-})
-
 app.post("/register", async (req,res)=>{
     const {username, password} = req.body;
     try{
@@ -101,6 +97,11 @@ app.post("/register", async (req,res)=>{
     }
 })
 
+app.post("/goods-list", async (req,res) => {
+    const products = await Product.find({});
+    res.json(products).status(200);
+})
+
 app.post("/add-good", (req, res) => {
     console.log(req.body);
     res.json("create").status(201);
@@ -108,10 +109,11 @@ app.post("/add-good", (req, res) => {
 
 app.post("/upload_files", upload.any(), uploadFiles);
 
-function uploadFiles(req, res) {
-    baseShopCart = [...baseShopCart, {...req.body, filename: req.files[0].filename}]
-    console.log(baseShopCart)
-    res.json({ message: "Successfully uploaded files" }).status(201)
+async function uploadFiles(req, res) {
+    const newProduct = {...req.body, filename: req.files[0].filename};
+    newProduct.price = +newProduct.price;
+    const createdProduct = await Product.create(newProduct);
+    res.json(createdProduct._id).status(201);
 }
 
 app.get("/files/:fileId", (req, res)=>{

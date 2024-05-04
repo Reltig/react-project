@@ -15,15 +15,15 @@ import AddGoodPage from "./pages/AddGoodPage"
 export default function MainApp() {
     return (
         <div className="">
-            <SiteHeader/>
             <BrowserRouter>
+                <SiteHeader/>
                 <Routes>
                     <Route path="/" index element={<GoodsList/>}/>
                     <Route path="/add-good" element={<AddGoodPage/>}/>
                 </Routes>
+                <Outlet/>
+                <SiteFooter/>
             </BrowserRouter>
-            <Outlet/>
-            <SiteFooter/>
         </div>
     )
 }
