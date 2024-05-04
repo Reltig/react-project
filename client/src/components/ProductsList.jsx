@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function ProductsList() {
     const {nameStartWithFilter} = useContext(ProductFilterContext);
-    const [list, setList] = useState([{name: "name0", description: "descr", price: 100}]);
+    const [list, setList] = useState([]);
 
     useEffect(() => {
         axios.post("/goods-list", {startWith: nameStartWithFilter})
@@ -15,7 +15,7 @@ export default function ProductsList() {
     return (
         <div className="grid grid-cols-4">
             {list.map(el => (
-                <ProductCard key={el.name} name={el.name} description={el.description} price={el.price} filename={el.filename}/>
+                <ProductCard key={el._id} id={el._id} name={el.name} description={el.description} price={el.price} filename={el.filename}/>
             ))}
         </div>
     )

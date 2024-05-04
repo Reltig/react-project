@@ -8,6 +8,7 @@ export default function SiteHeader() {
             <ul className="flex">
                 <li className="mr-2"><Link to="/">Home</Link></li>
                 <li className="mr-2"><Link to="/add-good">Add good</Link></li>
+                <li className="mr-2"><Link to="/cart">Cart</Link></li>
             </ul>
         </header>
     );

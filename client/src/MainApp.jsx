@@ -11,6 +11,7 @@ import {
   } from 'react-router-dom';
 import GoodsList from "./pages/GoodsList"
 import AddGoodPage from "./pages/AddGoodPage"
+import Cart from "./pages/Cart"
 
 export default function MainApp() {
     return (
@@ -20,6 +21,7 @@ export default function MainApp() {
                 <Routes>
                     <Route path="/" index element={<GoodsList/>}/>
                     <Route path="/add-good" element={<AddGoodPage/>}/>
+                    <Route path="/cart" element={<Cart/>}/>
                 </Routes>
                 <Outlet/>
                 <SiteFooter/>

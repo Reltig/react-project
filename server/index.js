@@ -122,4 +122,39 @@ app.get("/files/:fileId", (req, res)=>{
     res.download(file);
 })
 
+app.get("/user-cart", async (req, res)=>{
+    const token = req.cookies?.token;
+
+    if (!token){
+        res.json("no token").status(401);
+        return;
+    }
+
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        const {userId, username} = userData;
+        const cartIds = (await User.findById(userId)).cart;
+        const result = await Product.find({_id: {$in: cartIds}});
+        res.json(result || []).status(201);
+    });
+})
+
+app.post("/add-to-cart/:productId", async (req, res)=>{
+    const token = req.cookies?.token;
+
+    if (!token){
+        res.json("no token").status(401);
+        return;
+    }
+
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        const {userId, username} = userData;
+        const user = await User.findById(userId);
+        user.cart.push(req.params.productId);
+        user.save();
+        res.json("succes").status(201);
+    });
+})
+
 app.listen(4000);
