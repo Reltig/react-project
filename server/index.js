@@ -112,6 +112,7 @@ app.post("/upload_files", upload.any(), uploadFiles);
 async function uploadFiles(req, res) {
     const newProduct = {...req.body, filename: req.files[0].filename};
     newProduct.price = +newProduct.price;
+    console.log(newProduct);
     const createdProduct = await Product.create(newProduct);
     res.json(createdProduct._id).status(201);
 }
