@@ -3,35 +3,20 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken")
-const dotenv = require("dotenv")
-const User = require("./models/User")
-const Product = require("./models/Product")
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const authentificator = require("./authentificator");
+const User = require("./models/User");
+const Product = require("./models/Product");
 const multer = require("multer");
-const upload = multer({ dest: "public/" })
+const upload = multer({ dest: "public/" });
 
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL);
 const jwtSecret = process.env.JWT_SECRET;
 const bcryptSalt = bcrypt.genSaltSync(10);
 
-let baseShopCart = [
-    {
-        name: "tovar1",
-        description: "desc tovar1",
-        price: 100
-    },
-    {
-        name: "tovar2",
-        description: "desc tovar2",
-        price: 200
-    },
-    {
-        name: "tovar3",
-        description: "desc tovar3",
-        price: 300
-    }
-]
+const auth = authentificator(jwtSecret);
 
 const app = express();
 app.use(express.json())
@@ -45,21 +30,6 @@ app.use(cors({
 
 app.get("/test", (req, res)=>{
     res.json('test ok')
-})
-
-app.get("/profile", (req, res) => {
-    const token = req.cookies?.token;
-
-    if (!token){
-        res.status(401).json("no token");
-        return;
-    }
-
-    jwt.verify(token, jwtSecret, {}, (err, userData) => {
-        if (err) throw err;
-        const {id, username} = userData;
-        res.json(userData);
-    });
 })
 
 app.post("/login", async (req, res) => {
@@ -97,6 +67,14 @@ app.post("/register", async (req,res)=>{
     }
 })
 
+app.use(auth)
+
+app.get("/profile", (req, res) => {
+    if (!req?.userData)
+        res.status(401);
+    res.json(req.userData);
+})
+
 app.post("/goods-list", async (req,res) => {
     const products = await Product.find({});
     res.json(products).status(200);
@@ -107,15 +85,13 @@ app.post("/add-good", (req, res) => {
     res.json("create").status(201);
 })
 
-app.post("/upload_files", upload.any(), uploadFiles);
-
-async function uploadFiles(req, res) {
+app.post("/upload_files", upload.any(), async (req, res) => {
     const newProduct = {...req.body, filename: req.files[0].filename};
     newProduct.price = +newProduct.price;
     console.log(newProduct);
     const createdProduct = await Product.create(newProduct);
     res.json(createdProduct._id).status(201);
-}
+});
 
 app.get("/files/:fileId", (req, res)=>{
     const file = `${__dirname}/public/${req.params.fileId}`;
@@ -123,38 +99,16 @@ app.get("/files/:fileId", (req, res)=>{
 })
 
 app.get("/user-cart", async (req, res)=>{
-    const token = req.cookies?.token;
-
-    if (!token){
-        res.json("no token").status(401);
-        return;
-    }
-
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) throw err;
-        const {userId, username} = userData;
-        const cartIds = (await User.findById(userId)).cart;
-        const result = await Product.find({_id: {$in: cartIds}});
-        res.json(result || []).status(201);
-    });
+    const cartIds = (await User.findById(req.userData.userId)).cart;
+    const result = await Product.find({_id: {$in: cartIds}});
+    res.json(result || []).status(201);
 })
 
 app.post("/add-to-cart/:productId", async (req, res)=>{
-    const token = req.cookies?.token;
-
-    if (!token){
-        res.json("no token").status(401);
-        return;
-    }
-
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) throw err;
-        const {userId, username} = userData;
-        const user = await User.findById(userId);
-        user.cart.push(req.params.productId);
-        user.save();
-        res.json("succes").status(201);
-    });
+    const user = await User.findById(req.userData.userId);
+    user.cart.push(req.params.productId);
+    user.save();
+    res.json("succes").status(201);
 })
 
 app.listen(4000);

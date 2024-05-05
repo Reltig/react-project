@@ -10,7 +10,8 @@ export default function CartCard({name, description, price, filename}) {
             <h1>{name}</h1>
             <img src={filename ? `http://localhost:4000/files/${filename}` :  logo}
                 alt=""
-                width="150"
+                width={50}
+                height={50}
                 className=""
             />
             <p>{description}</p>
