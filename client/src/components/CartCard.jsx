@@ -5,9 +5,9 @@ import { useState } from "react";
 export default function CartCard({id, name, description, price, filename, value}) {
     const [count, setCount] = useState(value);
 
-    function handleRemove(ev){
+    function handleDelete(ev){
         ev.preventDefault();
-        
+        axios.delete(`/cart/modify-value/${id}`);
     }
 
     function modifyValue(m) {
@@ -35,7 +35,7 @@ export default function CartCard({id, name, description, price, filename, value}
                 <div className="px-2 mx-2 border border-solid border-black rounded-sm">{count}</div>
                 <button onClick={modifyValue(-1)} className="text-white bg-red-500 w-4">-</button>
             </div>
-            <input type="button" onClick={modifyValue(-1)} className="bg-red-500" value="Delete"/>
+            <input type="button" onClick={handleDelete} className="bg-red-500" value="Delete"/>
         </div>
     );
 }
