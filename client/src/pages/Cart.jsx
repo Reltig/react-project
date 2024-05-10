@@ -18,6 +18,7 @@ export default function Cart() {
                 {cart.map(prod => (
                     <CartCard 
                         key={prod._id}
+                        id={prod._id}
                         value={prod.value}
                         name={prod.name} 
                         description={prod.description} 

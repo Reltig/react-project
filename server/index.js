@@ -116,4 +116,11 @@ app.post("/add-to-cart/:productId", async (req, res)=>{
     res.json("succes").status(201);
 })
 
+app.patch("/cart/modify-value/:productId", async (req, res) => {
+    const user = await User.updateOne(
+        {_id: req.userData.userId, "cart.productId": req.params.productId}, 
+        {$inc: {"cart.$.value": req.body.value || 1}}
+    );
+})
+
 app.listen(4000);
