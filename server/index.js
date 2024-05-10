@@ -80,6 +80,11 @@ app.post("/goods-list", async (req,res) => {
     res.json(products).status(200);
 })
 
+app.get("/product/:productId", async (req,res) => {
+    const product = await Product.findById(req.params.productId);
+    res.json(product).status(200);
+})
+
 app.post("/add-good", upload.any(), async (req, res) => {
     const newProduct = {...req.body, filename: req.files[0].filename};
     newProduct.price = +newProduct.price;
@@ -89,8 +94,13 @@ app.post("/add-good", upload.any(), async (req, res) => {
 });
 
 app.get("/files/:fileId", (req, res)=>{
-    const file = `${__dirname}/public/${req.params.fileId}`;
-    res.download(file);
+    if (req.params.fileId == "undefined"){
+        res.status(400);
+    }
+    else{
+        const file = `${__dirname}/public/${req.params.fileId}`;
+        res.download(file);
+    }
 })
 
 app.get("/user-cart", async (req, res)=>{

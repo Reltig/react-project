@@ -1,6 +1,6 @@
 import axios from "axios";
 import logo from "../assets/react.svg"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CartCard({id, name, description, price, filename, value}) {
     const [count, setCount] = useState(value);
@@ -8,6 +8,7 @@ export default function CartCard({id, name, description, price, filename, value}
     function handleDelete(ev){
         ev.preventDefault();
         axios.delete(`/cart/modify-value/${id}`);
+        setCount(0);
     }
 
     function modifyValue(m) {

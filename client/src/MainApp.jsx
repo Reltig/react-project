@@ -12,6 +12,7 @@ import {
 import GoodsList from "./pages/GoodsList"
 import AddGoodPage from "./pages/AddGoodPage"
 import Cart from "./pages/Cart"
+import ProductPage from "./pages/ProductPage"
 
 export default function MainApp() {
     return (
@@ -22,6 +23,7 @@ export default function MainApp() {
                     <Route path="/" index element={<GoodsList/>}/>
                     <Route path="/add-good" element={<AddGoodPage/>}/>
                     <Route path="/cart" element={<Cart/>}/>
+                    <Route path="/products/:id" element={<ProductPage/>}/>
                 </Routes>
                 <Outlet/>
                 <SiteFooter/>
