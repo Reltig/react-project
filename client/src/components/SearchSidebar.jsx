@@ -10,7 +10,7 @@ export default function SearchSidebar() {
     }
 
     return (
-        <aside className="bg-fuchsia-900 w-64 p-2">
+        <aside className="rounded-sm bg-slate-200 p-3 my-2">
             Enter name:
             <input type="text" value={nameStartWithFilter} onChange={handle}/>
         </aside>

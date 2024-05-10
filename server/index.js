@@ -80,12 +80,7 @@ app.post("/goods-list", async (req,res) => {
     res.json(products).status(200);
 })
 
-app.post("/add-good", (req, res) => {
-    console.log(req.body);
-    res.json("create").status(201);
-})
-
-app.post("/upload_files", upload.any(), async (req, res) => {
+app.post("/add-good", upload.any(), async (req, res) => {
     const newProduct = {...req.body, filename: req.files[0].filename};
     newProduct.price = +newProduct.price;
     console.log(newProduct);
@@ -99,14 +94,24 @@ app.get("/files/:fileId", (req, res)=>{
 })
 
 app.get("/user-cart", async (req, res)=>{
-    const cartIds = (await User.findById(req.userData.userId)).cart;
-    const result = await Product.find({_id: {$in: cartIds}});
+    const cart = (await User.findById(req.userData.userId)).cart;
+    const cartIds = cart.map(p => p.productId);
+    const mapper = {};
+    cart.forEach(p => mapper[p.productId] = p.value)
+    const result = (await Product.find({_id: {$in: cartIds}})).map(r => {
+        return ({...r._doc, value: mapper[`${r._id}`]});
+    });
     res.json(result || []).status(201);
 })
 
 app.post("/add-to-cart/:productId", async (req, res)=>{
     const user = await User.findById(req.userData.userId);
-    user.cart.push(req.params.productId);
+    const newElement = {
+        productId: req.params.productId,
+        value: 1
+    }
+    if (!user.cart.some(p => p.productId == newElement.productId))
+        user.cart.push(newElement);
     user.save();
     res.json("succes").status(201);
 })

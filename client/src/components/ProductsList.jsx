@@ -13,7 +13,7 @@ export default function ProductsList() {
     }, [nameStartWithFilter])
 
     return (
-        <div className="grid grid-cols-4">
+        <div className="w-full">
             {list.map(el => (
                 <ProductCard key={el._id} id={el._id} name={el.name} description={el.description} price={el.price} filename={el.filename}/>
             ))}

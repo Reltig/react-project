@@ -13,13 +13,15 @@ export default function ProductCard({id, name, description, price, filename}) {
     }
 
     return (
-        <div className="bg-white w-60 h-60 m-3 items-center">
-            <img src={filename ? `http://localhost:4000/files/${filename}` :  logo} alt="" width={50} height={50} className="mx-auto"/>
-            <div className="w-20 mx-auto">
-                <h2>{name}</h2>
+        <div className="bg-white h-60 m-2 p-2 items-center flex">
+            <img src={filename ? `http://localhost:4000/files/${filename}` :  logo} alt="" width={150} height={150} className=""/>
+            <div className="p-2">
+                <b className="">{name}</b>
                 <div>{description}</div>
-                <div>{price}</div>
-                <input type="button" onClick={handleAddToCart} className="bg-green-500" value="Add to cart" />
+            </div>
+            <div className="ml-auto">
+                <div>Цена: {price}</div>
+                <input type="button" onClick={handleAddToCart} className="bg-green-500 p-1 rounded-sm" value="Add to cart" />
             </div>
         </div>
     );

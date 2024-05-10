@@ -1,4 +1,6 @@
-export default function CartCard({name, description, price, filename}) {
+import logo from "../assets/react.svg"
+
+export default function CartCard({name, description, price, filename, value}) {
     
     function handleRemove(ev){
         ev.preventDefault();
@@ -6,7 +8,7 @@ export default function CartCard({name, description, price, filename}) {
     }
     
     return (
-        <div className="bg-white rounded mb-2">
+        <div className="bg-white rounded mb-2 p-3">
             <h1>{name}</h1>
             <img src={filename ? `http://localhost:4000/files/${filename}` :  logo}
                 alt=""
@@ -15,6 +17,7 @@ export default function CartCard({name, description, price, filename}) {
                 className=""
             />
             <p>{description}</p>
+            <p>Количество: {value}</p>
             <p>Цена: {price}</p>
             <input type="button" onClick={handleRemove} className="bg-red-500" value="Delete"/>
         </div>

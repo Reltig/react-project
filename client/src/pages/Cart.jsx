@@ -6,7 +6,10 @@ export default function Cart() {
     const [cart, setCart] = useState([])
     useEffect(() => {
         axios.get("/user-cart")
-            .then((res) => setCart(res.data))
+            .then((res) => {
+                setCart(res.data);
+                console.log(res.data);
+            });
     }, []);
 
     return (
@@ -15,6 +18,7 @@ export default function Cart() {
                 {cart.map(prod => (
                     <CartCard 
                         key={prod._id}
+                        value={prod.value}
                         name={prod.name} 
                         description={prod.description} 
                         price={prod.price} 

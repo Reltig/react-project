@@ -5,7 +5,7 @@ import ProductsList from "../components/ProductsList"
 export default function GoodsList() {
     return (
         <ProductFilterContextProvider>
-                <main className="mb-auto h-auto bg-green-500 flex">
+                <main className="mb-auto h-auto bg-blue-200 flex">
                     <SearchSidebar/>
                     <ProductsList/>
                 </main>

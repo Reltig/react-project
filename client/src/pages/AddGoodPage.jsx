@@ -14,12 +14,11 @@ export default function AddGoodPage() {
         data.append("description", description);
         data.append("price", price);
         data.append("image", selectedImage);
-        console.log(Array.from(data.keys()));
-        console.log(await axios.post("/upload_files", data, {headers: { 'content-type': 'multipart/form-data' }}));
+        console.log(await axios.post("/add-good", data, {headers: { 'content-type': 'multipart/form-data' }}));
     }
     
     return (
-        <div>
+        <div className="bg-blue-200 py-2">
             <form className="w-80 mx-auto" onSubmit={handleSubmit}>
                 <p>Название товара</p>
                 <input type="text" 
