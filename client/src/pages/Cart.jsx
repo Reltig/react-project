@@ -12,8 +12,13 @@ export default function Cart() {
             });
     }, []);
 
+    function createOrder(ev){
+        ev.preventDefault();
+        axios.post("/cart/create-order").then((res)=> console.log(res))
+    }
+
     return (
-        <div className="bg-blue-100 flex items-center">
+        <div className="bg-blue-100 items-center">
             <ul className="w-96 mx-auto">
                 {cart.map(prod => (
                     <CartCard 
@@ -26,6 +31,7 @@ export default function Cart() {
                         filename={prod.filename}/>
                 ))}
             </ul>
+            <input type="button" value="Create order" onClick={createOrder} />
         </div>
     );
 }

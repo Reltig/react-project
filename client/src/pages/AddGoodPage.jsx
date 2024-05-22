@@ -18,8 +18,8 @@ export default function AddGoodPage() {
     }
     
     return (
-        <div className="bg-blue-200 py-2">
-            <form className="w-80 mx-auto" onSubmit={handleSubmit}>
+        <div className="bg-blue-200 py-2 h-screen">
+            <form className="w-80 mx-auto mt-40" onSubmit={handleSubmit}>
                 <p>Название товара</p>
                 <input type="text" 
                     value={goodName}

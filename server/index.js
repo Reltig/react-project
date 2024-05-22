@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const authentificator = require("./authentificator");
+const Order = require("./models/Order");
 const User = require("./models/User");
 const Product = require("./models/Product");
 const multer = require("multer");
@@ -88,7 +89,6 @@ app.get("/product/:productId", async (req,res) => {
 app.post("/add-good", upload.any(), async (req, res) => {
     const newProduct = {...req.body, filename: req.files[0].filename};
     newProduct.price = +newProduct.price;
-    console.log(newProduct);
     const createdProduct = await Product.create(newProduct);
     res.json(createdProduct._id).status(201);
 });
@@ -140,6 +140,38 @@ app.delete("/cart/modify-value/:productId", async (req, res) => {
         {$pull: {"cart": {productId: req.params.productId}}}
     );
     res.json({status: "succes"}).status(200);
+})
+
+app.post("/cart/create-order", async (req, res) => {
+    const cart = (await User.findById(req.userData.userId)).cart;
+    const result = await Order.create({
+        customerId: req.userData.userId,
+        products: cart
+    });
+    await User.findOneAndUpdate(
+        {_id: req.userData.userId},
+        {$set: {cart: []}}
+    )
+    res.json(result).status(200);
+})
+
+app.get("/orders", async (req, res) => {
+    const result = await Order.aggregate([
+        {
+            $lookup: {
+                from: "products",
+                localField: "products.productId",
+                foreignField: "_id",
+                as: "products.list"
+            }
+        },
+        {
+            $project: {
+                result: "$products.list"
+            }
+        }
+    ]);
+    res.json(result);
 })
 
 app.listen(4000);
