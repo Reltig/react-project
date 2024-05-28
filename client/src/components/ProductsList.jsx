@@ -4,13 +4,17 @@ import ProductCard from "./ProductCard";
 import axios from "axios";
 
 export default function ProductsList() {
-    const {nameStartWithFilter} = useContext(ProductFilterContext);
+    const {
+        nameStartWithFilter, 
+        lowestPrice, 
+        highestPrice
+    } = useContext(ProductFilterContext)
     const [list, setList] = useState([]);
 
     useEffect(() => {
-        axios.post("/goods-list", {startWith: nameStartWithFilter})
+        axios.post("/goods-list", {startWith: nameStartWithFilter, lowestPrice, highestPrice})
             .then((res) => setList(res.data));
-    }, [nameStartWithFilter])
+    }, [nameStartWithFilter, lowestPrice, highestPrice])
 
     return (
         <div className="w-full">

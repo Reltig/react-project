@@ -11,11 +11,12 @@ export default function Orders() {
     }, [])
     
     return (
-        <div>
+        <div className="bg-blue-300">
             <ul>
                 {orders.map((o) => (
                     <OrderCard 
                         key={o._id}
+                        id={o._id}
                         products={o.result}/>
                 ))}
             </ul>

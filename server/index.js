@@ -77,7 +77,15 @@ app.get("/profile", (req, res) => {
 })
 
 app.post("/goods-list", async (req,res) => {
-    const products = await Product.find({});
+    console.log(req.body);
+    let priceCondition = {$gt: +req.body.lowestPrice};
+    if (req.body.highestPrice !== "")
+        priceCondition["$lt"] = +req.body.highestPrice;
+    console.log(priceCondition);
+    const products = await Product.find({
+        name: {$regex: req.body.startWith, $options: "i"},
+        price: priceCondition
+    });
     res.json(products).status(200);
 })
 
