@@ -18,7 +18,7 @@ export default function Cart() {
     }
 
     return (
-        <div className="bg-blue-100 items-center">
+        <div className="bg-blue-100 items-center min-h-screen">
             <ul className="w-96 mx-auto">
                 {cart.map(prod => (
                     <CartCard 
@@ -31,7 +31,9 @@ export default function Cart() {
                         filename={prod.filename}/>
                 ))}
             </ul>
-            <input type="button" value="Create order" onClick={createOrder} />
+            <div className="w-20 mx-auto">
+                <input className="p-2 bg-white border-2 border-black" type="button" value="Create order" onClick={createOrder} />
+            </div>
         </div>
     );
 }

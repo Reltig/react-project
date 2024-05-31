@@ -14,6 +14,7 @@ import AddGoodPage from "./pages/AddGoodPage"
 import Cart from "./pages/Cart"
 import ProductPage from "./pages/ProductPage"
 import Orders from "./pages/Orders"
+import UsersList from "./pages/UsersList"
 
 export default function MainApp() {
     return (
@@ -26,6 +27,7 @@ export default function MainApp() {
                     <Route path="/cart" element={<Cart/>}/>
                     <Route path="/products/:id" element={<ProductPage/>}/>
                     <Route path="/orders" element={<Orders/>}/>
+                    <Route path="/users" element={<UsersList/>}/>
                 </Routes>
                 <Outlet/>
                 <SiteFooter/>

@@ -11,7 +11,7 @@ export default function Orders() {
     }, [])
     
     return (
-        <div className="bg-blue-300">
+        <div className="bg-blue-300 min-h-screen">
             <ul>
                 {orders.map((o) => (
                     <OrderCard 

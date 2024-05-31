@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProductFilterContext } from "../ProductFilterContext";
+import axios from "axios";
 
 export default function SearchSidebar() {
     const {
@@ -8,8 +9,16 @@ export default function SearchSidebar() {
         lowestPrice, 
         setLowestPrice,
         highestPrice, 
-        setHighestPrice
-    } = useContext(ProductFilterContext)
+        setHighestPrice,
+        category, 
+        setCategory
+    } = useContext(ProductFilterContext);
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(()=> {
+        axios.get("/categories").then(res => setCategories(res.data));
+    }, [])
 
     function handle(setFunc){
         return (ev) => {
@@ -33,6 +42,14 @@ export default function SearchSidebar() {
                     To:
                     <input className="w-12" type="text" value={highestPrice} onChange={handle(setHighestPrice)}/>
                 </div>
+            </div>
+            <div className="flex">
+                <p>Category:&nbsp;</p>
+                <select name="" value={category} onChange={e => setCategory(e.target.value)}>
+                    {categories.map(category => 
+                        <option key={category._id} value={category.name}>{category.name}</option>
+                    )}
+                </select>
             </div>
         </aside>
     );

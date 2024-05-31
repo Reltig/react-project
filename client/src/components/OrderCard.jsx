@@ -2,7 +2,7 @@ import OrderCardProduct from "./OrderCardProduct";
 
 export default function OrderCard({id, products}) {
     return (
-        <div className="border-2 border-black">
+        <div className="bg-white border-2 border-blue-200 rounded-sm mx-5">
             <p>Заказ {id}</p>
             <ul>
                 {products.map(p => (

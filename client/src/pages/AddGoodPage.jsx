@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function AddGoodPage() {
@@ -6,6 +6,13 @@ export default function AddGoodPage() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(()=> {
+        axios.get("/categories").then(res => setCategories(res.data));
+    }, [categories])
 
     async function handleSubmit(ev){
         ev.preventDefault()
@@ -45,6 +52,12 @@ export default function AddGoodPage() {
                         console.log(event.target.files[0]);
                         setSelectedImage(event.target.files[0]);
                       }}/>
+                Категория:&nbsp;
+                <select name="" value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
+                    {categories.map(category => 
+                        <option key={category._id} value={category.name}>{category.name}</option>
+                    )}
+                </select>
                 <button className="bg-blue-700 block w-full p-2">Добавить товар</button>
             </form>
         </div>

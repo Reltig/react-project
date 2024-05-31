@@ -7,6 +7,7 @@ export default function ProductFilterContextProvider({children}) {
     const [nameStartWithFilter, setNameStartWithFilter] = useState("");
     const [lowestPrice, setLowestPrice] = useState(0);
     const [highestPrice, setHighestPrice] = useState(null);
+    const [category, setCategory] = useState("");
 
     return (
         <ProductFilterContext.Provider value={{
@@ -15,7 +16,9 @@ export default function ProductFilterContextProvider({children}) {
             lowestPrice, 
             setLowestPrice,
             highestPrice, 
-            setHighestPrice}}>
+            setHighestPrice,
+            category, 
+            setCategory}}>
             {children}
         </ProductFilterContext.Provider>
     )

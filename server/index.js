@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 const authentificator = require("./authentificator");
 const Order = require("./models/Order");
 const User = require("./models/User");
+const Category = require("./models/Category");
 const Product = require("./models/Product");
 const multer = require("multer");
 const upload = multer({ dest: "public/" });
@@ -33,13 +34,19 @@ app.get("/test", (req, res)=>{
     res.json('test ok')
 })
 
+app.get("/add-category/:category", async (req, res)=>{
+    const result = await Category.create({name: req.params.category});
+    console.log(result);
+    res.status(201);
+})
+
 app.post("/login", async (req, res) => {
     const {username, password} = req.body;
     const foundedUser = await User.findOne({username});
     if (foundedUser){
         const passwordIsOk = bcrypt.compareSync(password, foundedUser.password);
         if (passwordIsOk){
-            jwt.sign({userId:foundedUser._id, username}, jwtSecret, {}, (err, token) => {
+            jwt.sign({userId:foundedUser._id, username, role: foundedUser.role}, jwtSecret, {}, (err, token) => {
                 res.cookie('token', token,  {sameSite:'none', secure:true}).json({
                     id: foundedUser._id
                 })
@@ -48,15 +55,26 @@ app.post("/login", async (req, res) => {
     }
 })
 
+app.get("/logout", (req, res)=> {
+    res.cookie('token', 'none', {
+        sameSite:'none',
+        expires: new Date(Date.now() + 5 * 1000),
+        httpOnly: true,
+        secure: true
+    })
+    res.json("ok");
+})
+
 app.post("/register", async (req,res)=>{
-    const {username, password} = req.body;
+    const {username, password, role} = req.body;
     try{
         const hashedPassword = bcrypt.hashSync(password, bcryptSalt);
         const createdUser = await User.create({
             username, 
-            password: hashedPassword
+            password: hashedPassword,
+            role
         });
-        jwt.sign({userId: createdUser._id, username}, jwtSecret, {}, (err, token) => {
+        jwt.sign({userId: createdUser._id, username, role}, jwtSecret, {}, (err, token) => {
             if (err) throw err;
             res.cookie("token", token, {sameSite:'none', secure:true}).status(201).json({
                 id: createdUser._id
@@ -77,16 +95,19 @@ app.get("/profile", (req, res) => {
 })
 
 app.post("/goods-list", async (req,res) => {
-    console.log(req.body);
     let priceCondition = {$gt: +req.body.lowestPrice};
-    if (req.body.highestPrice !== "")
+    if (req.body.highestPrice != "" && req.body.highestPrice != null)
         priceCondition["$lt"] = +req.body.highestPrice;
-    console.log(priceCondition);
     const products = await Product.find({
         name: {$regex: req.body.startWith, $options: "i"},
         price: priceCondition
     });
     res.json(products).status(200);
+})
+
+app.get("/categories", async (req, res)=> {
+    const result = await Category.find({});
+    res.json(result);
 })
 
 app.get("/product/:productId", async (req,res) => {
@@ -180,6 +201,21 @@ app.get("/orders", async (req, res) => {
         }
     ]);
     res.json(result);
+})
+
+app.get("/users", async (req, res) => {
+    const result = await User.aggregate([{
+        $project: {
+            username: 1
+        }
+    }]);
+    res.json(result);
+})
+
+app.delete("/users", async (req, res)=> {
+    const _id = req.body.id;
+    await User.deleteOne({_id});
+    res.status(204)
 })
 
 app.listen(4000);

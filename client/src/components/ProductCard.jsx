@@ -25,7 +25,7 @@ export default function ProductCard({id, name, description, price, filename}) {
                 <div>{description}</div>
             </div>
             <div className="ml-auto">
-                <div>Цена: {price}</div>
+                <div>Цена: {price}&nbsp;{'\u20bd'}</div>
                 <input type="button" onClick={handleAddToCart} className="bg-green-500 p-1 rounded-sm" value="Add to cart" />
             </div>
         </div>
