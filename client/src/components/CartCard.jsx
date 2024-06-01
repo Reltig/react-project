@@ -1,6 +1,6 @@
 import axios from "axios";
-import logo from "../assets/react.svg"
 import { useEffect, useState } from "react";
+import ProductImg from "../components/ProductImage"
 
 export default function CartCard({id, name, description, price, filename, value}) {
     const [count, setCount] = useState(value);
@@ -22,12 +22,7 @@ export default function CartCard({id, name, description, price, filename, value}
     return (
         <div className="bg-white rounded mb-2 p-3">
             <h1>{name}</h1>
-            <img src={filename ? `http://localhost:4000/files/${filename}` :  logo}
-                alt=""
-                width={50}
-                height={50}
-                className=""
-            />
+            <ProductImg filename={filename} width={50} height={50}/>
             <p>{description}</p>
             <p>Цена: {price}</p>
             <div className="flex">

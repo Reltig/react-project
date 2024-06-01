@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import logo from '../assets/react.svg'
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ProductImg from "../components/ProductImage";
 
 export default function ProductCard({id, name, description, price, filename}) {
 
@@ -16,9 +17,7 @@ export default function ProductCard({id, name, description, price, filename}) {
     return (
         <div className="bg-white h-60 m-2 p-2 items-center flex">
             <Link to={`/products/${id}`}>
-                <img src={filename ? `http://localhost:4000/files/${filename}` :  logo} 
-                    alt="" 
-                    width={150} height={150}/>
+                <ProductImg filename={filename} width={150} height={150}/>
             </Link>
             <div className="p-2">
                 <b className="">{name}</b>
