@@ -11,7 +11,8 @@ const User = require("./models/User");
 const Category = require("./models/Category");
 const Product = require("./models/Product");
 const multer = require("multer");
-const upload = multer({ dest: "public/" });
+//const upload = multer({ dest: "public/" });
+const uploader = require("./uploader");
 
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL);
@@ -95,14 +96,15 @@ app.get("/profile", (req, res) => {
 })
 
 app.post("/goods-list", async (req,res) => {
-    let priceCondition = {$gt: +req.body.lowestPrice};
-    if (req.body.highestPrice != "" && req.body.highestPrice != null)
-        priceCondition["$lt"] = +req.body.highestPrice;
-    const products = await Product.find({
-        name: {$regex: req.body.startWith, $options: "i"},
-        price: priceCondition
-    });
-    res.json(products).status(200);
+    // let priceCondition = {$gt: +req.body.lowestPrice};
+    // if (req.body.highestPrice != "" && req.body.highestPrice != null)
+    //     priceCondition["$lt"] = +req.body.highestPrice;
+    // const products = await Product.find({
+    //     name: {$regex: req.body.startWith, $options: "i"},
+    //     price: priceCondition
+    // });
+    const products = await Product.find({});
+    res.json(products);
 })
 
 app.get("/categories", async (req, res)=> {
@@ -115,10 +117,12 @@ app.get("/product/:productId", async (req,res) => {
     res.json(product).status(200);
 })
 
-app.post("/add-good", upload.any(), async (req, res) => {
-    const newProduct = {...req.body, filename: req.files[0].filename};
+app.post("/add-good", multer().any(), async (req, res) => {
+    const upload = await uploader.Upload({ buffer: req.files[0].buffer }, '/images/');
+    const newProduct = {...req.body, filename: upload.key.split('/')[1]};
     newProduct.price = +newProduct.price;
     const createdProduct = await Product.create(newProduct);
+    console.log(createdProduct);
     res.json(createdProduct._id).status(201);
 });
 

@@ -18,13 +18,6 @@ let s3 = new EasyYandexS3({
   debug: true, 
 });
 
-/*s3.Upload(
-    {
-      path: path.resolve(__dirname, './public/08dd1ad23a25eb97dde76ced18520e62'),
-    },
-    '/images/'
-).then(result => console.log(result));*/
-
 app.use(multer().any());
 
 app.post('/uploadFile', async (req, res) => {

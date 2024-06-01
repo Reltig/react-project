@@ -12,7 +12,7 @@ export default function AddGoodPage() {
 
     useEffect(()=> {
         axios.get("/categories").then(res => setCategories(res.data));
-    }, [categories])
+    }, [])
 
     async function handleSubmit(ev){
         ev.preventDefault()
